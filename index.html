@@ -1031,6 +1031,32 @@
     .stats-row { gap: 40px; }
     #faq { max-width: 100%; }
   }
+  /* --- FORCED FULL-SCREEN BACKGROUND VIDEO FIX --- */
+#heroVideo {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    object-fit: cover !important; /* This forces it to stretch perfectly without distorting */
+    z-index: -1 !important; /* This pushes the video behind your text and buttons */
+}
+
+/* Ensure the hero section itself allows full width */
+.hero, header, .hero-section {
+    position: relative !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: 100vh !important;
+    overflow: hidden !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+body {
+    margin: 0 !important;
+    padding: 0 !important;
+}
 </style>
 </head>
 <body>
@@ -1050,7 +1076,7 @@
     <video autoplay muted loop playsinline id="heroVideo">
       <source src="hero-video.mp4" type="video/mp4">
     </video>
-    <div class="hero-placeholder" id="heroBg"></div>
+
   </div>
 
   <div class="hero-content">
