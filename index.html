@@ -1,0 +1,1447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Once Human — Download Free for Windows</title>
+<meta name="description" content="Download Once Human for Windows. Free survival game — build, craft, fight mutated creatures and explore a vast open world.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Exo+2:wght@300;400;600;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #060810;
+    --surface: #0b0f1a;
+    --surface2: #111827;
+    --accent: #00e5ff;
+    --accent2: #ff6b35;
+    --accent3: #7c3aed;
+    --text: #e8eaf0;
+    --text-muted: #8892a4;
+    --border: rgba(0,229,255,0.15);
+    --glow: 0 0 30px rgba(0,229,255,0.4);
+    --glow2: 0 0 30px rgba(255,107,53,0.4);
+    --font-title: 'Exo 2', sans-serif;
+    --font-ui: 'Rajdhani', sans-serif;
+    --font-mono: 'Share Tech Mono', monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-ui);
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--accent3); border-radius: 3px; }
+
+  /* SCANLINE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    padding: 16px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(180deg, rgba(6,8,16,0.95) 0%, transparent 100%);
+    backdrop-filter: blur(2px);
+    border-bottom: 1px solid rgba(0,229,255,0.08);
+  }
+
+  .nav-logo {
+    font-family: var(--font-title);
+    font-weight: 900;
+    font-size: 22px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    text-shadow: var(--glow);
+  }
+
+  .nav-logo span { color: var(--text-muted); font-weight: 300; }
+
+  .nav-cta {
+    background: transparent;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    font-family: var(--font-ui);
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 10px 24px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .nav-cta::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--accent);
+    transform: translateX(-101%);
+    transition: transform 0.3s ease;
+    z-index: -1;
+  }
+
+  .nav-cta:hover::before { transform: translateX(0); }
+  .nav-cta:hover { color: var(--bg); box-shadow: var(--glow); }
+
+  /* HERO */
+  #hero {
+    position: relative;
+    height: 100vh;
+    min-height: 700px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .hero-video-wrap {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  .hero-video-wrap video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.45;
+  }
+
+  .hero-video-wrap::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(180deg, rgba(6,8,16,0.5) 0%, transparent 30%, transparent 60%, rgba(6,8,16,1) 100%),
+      linear-gradient(90deg, rgba(6,8,16,0.7) 0%, transparent 50%);
+  }
+
+  /* Placeholder when no video */
+  .hero-placeholder {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 60% 40%, rgba(124,58,237,0.3) 0%, transparent 60%),
+      radial-gradient(ellipse at 20% 80%, rgba(0,229,255,0.15) 0%, transparent 50%),
+      linear-gradient(135deg, #060810 0%, #0d1220 50%, #080c18 100%);
+  }
+
+  .hero-placeholder::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(circle, rgba(0,229,255,0.08) 1px, transparent 1px);
+    background-size: 40px 40px;
+    animation: gridShift 20s linear infinite;
+  }
+
+  @keyframes gridShift {
+    from { background-position: 0 0; }
+    to { background-position: 40px 40px; }
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: left;
+    padding: 0 48px;
+    max-width: 800px;
+    margin-left: 5vw;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0,229,255,0.08);
+    border: 1px solid var(--border);
+    padding: 6px 16px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 2px;
+    color: var(--accent);
+    margin-bottom: 24px;
+    text-transform: uppercase;
+  }
+
+  .hero-badge::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.8); }
+  }
+
+  .hero-title {
+    font-family: var(--font-title);
+    font-weight: 900;
+    font-size: clamp(52px, 8vw, 96px);
+    line-height: 0.95;
+    letter-spacing: -1px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .hero-title .line1 { color: var(--text); }
+  .hero-title .line2 {
+    color: transparent;
+    -webkit-text-stroke: 1px var(--accent);
+    text-shadow: none;
+  }
+
+  .hero-headline {
+    font-family: var(--font-title);
+    font-weight: 700;
+    font-size: clamp(18px, 2.5vw, 26px);
+    color: var(--accent2);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .hero-sub {
+    font-size: 17px;
+    color: var(--text-muted);
+    max-width: 520px;
+    margin-bottom: 40px;
+    line-height: 1.7;
+    font-weight: 400;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: linear-gradient(135deg, var(--accent) 0%, #00b4cc 100%);
+    color: var(--bg);
+    font-family: var(--font-title);
+    font-weight: 900;
+    font-size: 16px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 18px 40px;
+    cursor: pointer;
+    border: none;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+  }
+
+  .btn-primary::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #00ffee 0%, var(--accent) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 8px 40px rgba(0,229,255,0.5), 0 0 0 1px var(--accent);
+  }
+
+  .btn-primary:hover::before { opacity: 1; }
+
+  .btn-primary svg, .btn-primary span { position: relative; z-index: 1; }
+
+  .btn-icon {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+  }
+
+  .trust-row {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+
+  .trust-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+  }
+
+  .trust-item .ti-icon {
+    width: 16px;
+    height: 16px;
+    color: var(--accent);
+  }
+
+  /* SECTION SHARED */
+  section {
+    padding: 100px 48px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 4px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .section-label::after {
+    content: '';
+    height: 1px;
+    width: 60px;
+    background: var(--accent);
+    opacity: 0.5;
+  }
+
+  .section-title {
+    font-family: var(--font-title);
+    font-weight: 900;
+    font-size: clamp(32px, 4vw, 52px);
+    text-transform: uppercase;
+    letter-spacing: -0.5px;
+    line-height: 1.05;
+    margin-bottom: 48px;
+  }
+
+  /* SCROLL REVEAL */
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* SECTION 2 — GAMEPLAY */
+  #gameplay {
+    background: linear-gradient(180deg, transparent 0%, rgba(11,15,26,0.5) 100%);
+    max-width: 100%;
+    padding: 100px 48px;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  #gameplay > * { max-width: 1200px; margin-left: auto; margin-right: auto; }
+
+  .gameplay-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 60px;
+  }
+
+  .gif-card {
+    position: relative;
+    aspect-ratio: 16/10;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: border-color 0.3s ease, transform 0.3s ease;
+    clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
+  }
+
+  .gif-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5), var(--glow);
+  }
+
+  .gif-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s ease;
+  }
+
+  .gif-card:hover img { transform: scale(1.05); }
+
+  /* Placeholder for GIFs */
+  .gif-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 2px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+  }
+
+  .gif-placeholder.combat { background: linear-gradient(135deg, #1a0808 0%, #2d0f0f 100%); }
+  .gif-placeholder.explore { background: linear-gradient(135deg, #081a12 0%, #0f2d1e 100%); }
+  .gif-placeholder.build { background: linear-gradient(135deg, #08101a 0%, #0f1e2d 100%); }
+
+  .gif-placeholder .ph-icon {
+    font-size: 48px;
+    opacity: 0.6;
+  }
+
+  .gif-label {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 12px 16px;
+    background: linear-gradient(0deg, rgba(6,8,16,0.9) 0%, transparent 100%);
+    font-family: var(--font-ui);
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  .bullet-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 40px;
+  }
+
+  .bullet-list li {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-ui);
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
+  }
+
+  .bullet-list li::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: var(--accent);
+    transform: rotate(45deg);
+    flex-shrink: 0;
+  }
+
+  /* SECTION 3 — FEATURES */
+  #features {
+    padding: 100px 48px;
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  .feature-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 36px 32px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px));
+  }
+
+  .feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .feature-card:hover {
+    transform: translateY(-8px);
+    border-color: rgba(0,229,255,0.4);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 30px rgba(0,229,255,0.1);
+  }
+
+  .feature-card:hover::before { opacity: 1; }
+
+  .feature-icon {
+    width: 52px;
+    height: 52px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    background: rgba(0,229,255,0.05);
+    border: 1px solid var(--border);
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  }
+
+  .feature-card:nth-child(2) .feature-icon { background: rgba(255,107,53,0.05); }
+  .feature-card:nth-child(3) .feature-icon { background: rgba(124,58,237,0.05); }
+
+  .feature-title {
+    font-family: var(--font-title);
+    font-weight: 700;
+    font-size: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+    color: var(--text);
+  }
+
+  .feature-desc {
+    font-size: 15px;
+    color: var(--text-muted);
+    line-height: 1.65;
+    font-weight: 400;
+  }
+
+  /* SECTION 4 — SOCIAL PROOF */
+  #social-proof {
+    padding: 80px 48px;
+    text-align: center;
+    background: var(--surface);
+    max-width: 100%;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  #social-proof > * { max-width: 1200px; margin-left: auto; margin-right: auto; }
+
+  .stats-row {
+    display: flex;
+    justify-content: center;
+    gap: 80px;
+    margin-bottom: 60px;
+    flex-wrap: wrap;
+  }
+
+  .stat-item { text-align: center; }
+
+  .stat-number {
+    font-family: var(--font-title);
+    font-weight: 900;
+    font-size: 52px;
+    color: var(--accent);
+    line-height: 1;
+    text-shadow: var(--glow);
+    display: block;
+  }
+
+  .stat-label {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-top: 8px;
+  }
+
+  .stars {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    margin-bottom: 8px;
+  }
+
+  .star {
+    color: #fbbf24;
+    font-size: 20px;
+  }
+
+  .rating-text {
+    font-family: var(--font-title);
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--text-muted);
+    margin-bottom: 48px;
+  }
+
+  .testimonials {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .testimonial {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 28px;
+    text-align: left;
+    position: relative;
+  }
+
+  .testimonial::before {
+    content: '"';
+    position: absolute;
+    top: 12px;
+    right: 20px;
+    font-size: 60px;
+    font-family: Georgia, serif;
+    color: rgba(0,229,255,0.1);
+    line-height: 1;
+  }
+
+  .testimonial-text {
+    font-size: 15px;
+    color: var(--text-muted);
+    line-height: 1.7;
+    margin-bottom: 16px;
+    font-style: italic;
+  }
+
+  .testimonial-author {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 2px;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+
+  /* SECTION 5 — HOW TO START */
+  #how-to-start {
+    padding: 100px 48px;
+    background:
+      linear-gradient(180deg, rgba(0,229,255,0.02) 0%, transparent 100%),
+      var(--bg);
+    max-width: 100%;
+  }
+
+  #how-to-start > * { max-width: 1200px; margin-left: auto; margin-right: auto; }
+
+  .steps-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    position: relative;
+  }
+
+  .steps-row::before {
+    content: '';
+    position: absolute;
+    top: 52px;
+    left: calc(16.66% + 20px);
+    right: calc(16.66% + 20px);
+    height: 1px;
+    background: linear-gradient(90deg, var(--accent), var(--accent3), var(--accent));
+    opacity: 0.3;
+  }
+
+  .step {
+    padding: 40px 32px;
+    text-align: center;
+    position: relative;
+  }
+
+  .step-number {
+    width: 64px;
+    height: 64px;
+    background: var(--surface);
+    border: 2px solid var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-title);
+    font-weight: 900;
+    font-size: 26px;
+    color: var(--accent);
+    margin: 0 auto 24px;
+    position: relative;
+    z-index: 2;
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    text-shadow: var(--glow);
+    transition: background 0.3s ease;
+  }
+
+  .step:hover .step-number {
+    background: rgba(0,229,255,0.15);
+  }
+
+  .step-title {
+    font-family: var(--font-title);
+    font-weight: 700;
+    font-size: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+    color: var(--text);
+  }
+
+  .step-desc {
+    font-size: 15px;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  /* SECTION 6 — COMPATIBILITY */
+  #compatibility {
+    padding: 80px 48px;
+    background: var(--surface);
+    max-width: 100%;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  #compatibility > * { max-width: 1200px; margin-left: auto; margin-right: auto; }
+
+  .compat-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+
+  .compat-item {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 28px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transition: border-color 0.3s ease;
+  }
+
+  .compat-item:hover { border-color: rgba(0,229,255,0.4); }
+
+  .compat-icon {
+    font-size: 28px;
+    flex-shrink: 0;
+  }
+
+  .compat-text { font-family: var(--font-ui); }
+
+  .compat-title {
+    font-weight: 700;
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text);
+    margin-bottom: 2px;
+  }
+
+  .compat-detail {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+  }
+
+  /* SECTION 7 — FINAL CTA */
+  #final-cta {
+    padding: 120px 48px;
+    text-align: center;
+    max-width: 100%;
+    background:
+      radial-gradient(ellipse at 50% 100%, rgba(0,229,255,0.08) 0%, transparent 70%),
+      var(--bg);
+    border-top: 1px solid var(--border);
+  }
+
+  #final-cta > * { max-width: 1200px; margin-left: auto; margin-right: auto; }
+
+  .final-title {
+    font-family: var(--font-title);
+    font-weight: 900;
+    font-size: clamp(36px, 5vw, 72px);
+    text-transform: uppercase;
+    letter-spacing: -1px;
+    line-height: 1;
+    margin-bottom: 20px;
+  }
+
+  .final-title span { color: var(--accent); text-shadow: var(--glow); }
+
+  .final-sub {
+    font-size: 18px;
+    color: var(--text-muted);
+    margin-bottom: 48px;
+    max-width: 480px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .btn-large {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    background: linear-gradient(135deg, var(--accent) 0%, #00b4cc 100%);
+    color: var(--bg);
+    font-family: var(--font-title);
+    font-weight: 900;
+    font-size: 18px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 22px 52px;
+    cursor: pointer;
+    border: none;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
+    margin-bottom: 20px;
+  }
+
+  .btn-large:hover {
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 12px 50px rgba(0,229,255,0.6), 0 0 0 1px var(--accent);
+  }
+
+  .btn-large::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 60%);
+  }
+
+  .reassurance {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+  }
+
+  /* SECTION 8 — FAQ */
+  #faq {
+    padding: 100px 48px;
+    max-width: 800px;
+  }
+
+  .faq-item {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .faq-question {
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 24px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    font-family: var(--font-ui);
+    font-weight: 700;
+    font-size: 17px;
+    letter-spacing: 0.5px;
+    color: var(--text);
+    text-align: left;
+    transition: color 0.2s ease;
+  }
+
+  .faq-question:hover { color: var(--accent); }
+
+  .faq-chevron {
+    width: 20px;
+    height: 20px;
+    color: var(--accent);
+    transition: transform 0.3s ease;
+    flex-shrink: 0;
+  }
+
+  .faq-item.open .faq-chevron { transform: rotate(180deg); }
+
+  .faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, padding 0.3s ease;
+  }
+
+  .faq-item.open .faq-answer { max-height: 200px; }
+
+  .faq-answer p {
+    padding-bottom: 24px;
+    font-size: 15px;
+    color: var(--text-muted);
+    line-height: 1.7;
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    padding: 40px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .footer-logo {
+    font-family: var(--font-title);
+    font-weight: 900;
+    font-size: 18px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  .footer-copy {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+  }
+
+  /* DECORATIVE CORNER BRACKET */
+  .corner-br {
+    position: absolute;
+    bottom: -1px;
+    right: -1px;
+    width: 24px;
+    height: 24px;
+    border-bottom: 2px solid var(--accent);
+    border-right: 2px solid var(--accent);
+    opacity: 0.5;
+  }
+
+  .corner-tl {
+    position: absolute;
+    top: -1px;
+    left: -1px;
+    width: 24px;
+    height: 24px;
+    border-top: 2px solid var(--accent);
+    border-left: 2px solid var(--accent);
+    opacity: 0.5;
+  }
+
+  /* PROGRESS LINE */
+  .progress-line {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent3));
+    z-index: 200;
+    transition: width 0.1s ease;
+    box-shadow: 0 0 8px var(--accent);
+  }
+
+  /* HOVER PARTICLE BUTTON EFFECT */
+  @keyframes floatUp {
+    from { transform: translateY(0) scale(1); opacity: 0.6; }
+    to   { transform: translateY(-60px) scale(0); opacity: 0; }
+  }
+
+  /* DELAY UTILITIES */
+  .delay-1 { transition-delay: 0.1s; }
+  .delay-2 { transition-delay: 0.2s; }
+  .delay-3 { transition-delay: 0.3s; }
+  .delay-4 { transition-delay: 0.4s; }
+  .delay-5 { transition-delay: 0.5s; }
+
+  /* GLITCH EFFECT */
+  @keyframes glitch {
+    0%   { clip-path: inset(40% 0 61% 0); transform: translate(-4px, 0); }
+    20%  { clip-path: inset(92% 0 1% 0);  transform: translate(4px, 0); }
+    40%  { clip-path: inset(43% 0 45% 0); transform: translate(-4px, 0); }
+    60%  { clip-path: inset(25% 0 58% 0); transform: translate(4px, 0); }
+    80%  { clip-path: inset(54% 0 7% 0);  transform: translate(-4px, 0); }
+    100% { clip-path: inset(58% 0 43% 0); transform: translate(4px, 0); }
+  }
+
+  .glitch-wrap {
+    position: relative;
+    display: inline-block;
+  }
+
+  .glitch-wrap::before,
+  .glitch-wrap::after {
+    content: attr(data-text);
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .glitch-wrap::before {
+    color: var(--accent2);
+    animation: glitch 3s infinite linear alternate-reverse;
+    opacity: 0;
+  }
+
+  .glitch-wrap:hover::before { opacity: 0.7; }
+
+  /* NUMBER COUNTER ANIMATION */
+  @keyframes countUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    nav { padding: 14px 24px; }
+    section { padding: 60px 24px; }
+    #gameplay, #social-proof, #how-to-start, #compatibility, #final-cta, #faq { padding: 60px 24px; }
+    footer { padding: 30px 24px; }
+    .hero-content { padding: 0 24px; margin-left: 0; }
+    .gameplay-grid, .features-grid, .testimonials, .compat-grid { grid-template-columns: 1fr; }
+    .steps-row { grid-template-columns: 1fr; }
+    .steps-row::before { display: none; }
+    .stats-row { gap: 40px; }
+    #faq { max-width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<!-- PROGRESS BAR -->
+<div class="progress-line" id="progressBar"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Once<span>Human</span></div>
+  <a href="#final-cta" class="nav-cta">Download Free</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-video-wrap">
+    <video autoplay muted loop playsinline id="heroVideo">
+      <source src="hero-video.mp4" type="video/mp4">
+    </video>
+    <div class="hero-placeholder" id="heroBg"></div>
+  </div>
+
+  <div class="hero-content">
+    <div class="hero-badge reveal">Free-to-Play · Now Available</div>
+    <h1 class="hero-title">
+      <div class="line1 reveal delay-1">Once</div>
+      <div class="line2 glitch-wrap reveal delay-2" data-text="Human">Human</div>
+    </h1>
+    <p class="hero-headline reveal delay-2">Survive. Build. Fight Back.</p>
+    <p class="hero-sub reveal delay-3">A vast open-world survival game set in a world warped by cosmic horrors. Craft weapons, build your base, and fight for humanity alongside millions of players worldwide.</p>
+
+    <a href="#final-cta" class="btn-primary reveal delay-4">
+      <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 16L7 11h3V4h4v7h3l-5 5zm-7 3h14v2H5v-2z"/></svg>
+      <span>Download Once Human for Windows</span>
+    </a>
+
+    <div class="trust-row reveal delay-5">
+      <div class="trust-item">
+        <svg class="ti-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+        Free Official Installer
+      </div>
+      <div class="trust-item">
+        <svg class="ti-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M17 8C8 10 5.9 16.17 3.82 19.33L5.71 21C7 19.05 8.46 17.5 10 16.5 8.5 18.5 8 21 8 21h2s.46-2.07 2.5-4c1.5-1.5 4-2.5 4-2.5V21l5-5-5-5v2.5C13.5 9.5 17 8 17 8z"/></svg>
+        Windows Compatible
+      </div>
+      <div class="trust-item">
+        <svg class="ti-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+        Secure Download
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GAMEPLAY PREVIEW -->
+<div id="gameplay">
+  <div class="section-label reveal">02 / Gameplay</div>
+  <h2 class="section-title reveal">See The <span style="color:var(--accent)">World</span></h2>
+
+  <div class="gameplay-grid">
+    <div class="gif-card reveal">
+      <img src="gameplay1.gif" alt="Combat gameplay" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="gif-placeholder combat" style="display:none">
+        <span class="ph-icon">⚔️</span>
+        Replace with gameplay1.gif
+      </div>
+      <div class="gif-label">Combat</div>
+    </div>
+    <div class="gif-card reveal delay-1">
+      <img src="gameplay2.gif" alt="Exploration gameplay" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="gif-placeholder explore" style="display:none">
+        <span class="ph-icon">🌍</span>
+        Replace with gameplay2.gif
+      </div>
+      <div class="gif-label">Exploration</div>
+    </div>
+    <div class="gif-card reveal delay-2">
+      <img src="gameplay3.gif" alt="Base building gameplay" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="gif-placeholder build" style="display:none">
+        <span class="ph-icon">🏗️</span>
+        Replace with gameplay3.gif
+      </div>
+      <div class="gif-label">Base Building</div>
+    </div>
+  </div>
+
+  <ul class="bullet-list reveal">
+    <li>Huge open-world survival</li>
+    <li>Build and defend your base</li>
+    <li>Fight mutated creatures</li>
+    <li>Craft weapons and gear</li>
+    <li>Play solo or with friends</li>
+  </ul>
+</div>
+
+<!-- CORE FEATURES -->
+<section id="features">
+  <div class="section-label reveal">03 / Features</div>
+  <h2 class="section-title reveal">What Awaits <span style="color:var(--accent)">You</span></h2>
+
+  <div class="features-grid">
+    <div class="feature-card reveal">
+      <div class="corner-tl"></div>
+      <div class="corner-br"></div>
+      <div class="feature-icon">🏰</div>
+      <h3 class="feature-title">Build Your Territory</h3>
+      <p class="feature-desc">Construct fortified bases from scratch. Set up defenses, resource stations, and command centers to survive the night.</p>
+    </div>
+    <div class="feature-card reveal delay-1">
+      <div class="corner-tl"></div>
+      <div class="corner-br"></div>
+      <div class="feature-icon">☣️</div>
+      <h3 class="feature-title">Fight Mutated Creatures</h3>
+      <p class="feature-desc">Face terrifying mutated enemies born from cosmic contamination. Every encounter tests your skill, gear, and nerve.</p>
+    </div>
+    <div class="feature-card reveal delay-2">
+      <div class="corner-tl"></div>
+      <div class="corner-br"></div>
+      <div class="feature-icon">👥</div>
+      <h3 class="feature-title">Play With Other Survivors</h3>
+      <p class="feature-desc">Form alliances or go it alone. Team up with friends for high-risk raids or compete for resources in a shared living world.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SOCIAL PROOF -->
+<div id="social-proof">
+  <div class="stats-row reveal">
+    <div class="stat-item">
+      <span class="stat-number" data-target="10">0</span>
+      <div class="stat-label">Million+ Players</div>
+    </div>
+    <div class="stat-item">
+      <div class="stars">
+        <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star" style="opacity:0.5">★</span>
+      </div>
+      <span class="stat-number">4.6<span style="font-size:32px">/5</span></span>
+      <div class="stat-label">Player Rating</div>
+    </div>
+    <div class="stat-item">
+      <span class="stat-number" data-target="190">0</span>
+      <div class="stat-label">Countries</div>
+    </div>
+  </div>
+
+  <div class="testimonials">
+    <div class="testimonial reveal">
+      <p class="testimonial-text">The base building is insanely deep and the open world feels genuinely alive. Best survival game I've played in years.</p>
+      <div class="testimonial-author">— ShadowRunner_98, PC Gamer</div>
+    </div>
+    <div class="testimonial reveal delay-1">
+      <p class="testimonial-text">Playing with my squad every weekend. The mutations keep things unpredictable. Can't put it down.</p>
+      <div class="testimonial-author">— DesertFoxGames, Steam Review</div>
+    </div>
+    <div class="testimonial reveal delay-2">
+      <p class="testimonial-text">Free to play and actually polished. The world design is stunning and the gunplay feels great. Worth every minute.</p>
+      <div class="testimonial-author">— VoidWalker_X, Reddit</div>
+    </div>
+  </div>
+</div>
+
+<!-- HOW TO START -->
+<div id="how-to-start">
+  <div class="section-label reveal">05 / Get Started</div>
+  <h2 class="section-title reveal">Three Steps to <span style="color:var(--accent)">Play</span></h2>
+
+  <div class="steps-row">
+    <div class="step reveal">
+      <div class="step-number">01</div>
+      <div class="step-title">Download Installer</div>
+      <p class="step-desc">Click the download button to get the free official Windows installer directly from our servers.</p>
+    </div>
+    <div class="step reveal delay-1">
+      <div class="step-number">02</div>
+      <div class="step-title">Run Setup</div>
+      <p class="step-desc">Open the installer and follow the quick setup wizard. Installation takes just a few minutes.</p>
+    </div>
+    <div class="step reveal delay-2">
+      <div class="step-number">03</div>
+      <div class="step-title">Start Playing</div>
+      <p class="step-desc">Launch the game, create your survivor, and drop into the world. Millions are already waiting.</p>
+    </div>
+  </div>
+</div>
+
+<!-- COMPATIBILITY -->
+<div id="compatibility">
+  <div class="section-label reveal">06 / Compatibility</div>
+  <h2 class="section-title reveal" style="margin-bottom:32px">System <span style="color:var(--accent)">Ready</span></h2>
+
+  <div class="compat-grid">
+    <div class="compat-item reveal">
+      <div class="compat-icon">🖥️</div>
+      <div class="compat-text">
+        <div class="compat-title">Windows PC</div>
+        <div class="compat-detail">Win 10 / Win 11</div>
+      </div>
+    </div>
+    <div class="compat-item reveal delay-1">
+      <div class="compat-icon">⚡</div>
+      <div class="compat-text">
+        <div class="compat-title">Fast Download</div>
+        <div class="compat-detail">Direct CDN Servers</div>
+      </div>
+    </div>
+    <div class="compat-item reveal delay-2">
+      <div class="compat-icon">🎮</div>
+      <div class="compat-text">
+        <div class="compat-title">Free to Install</div>
+        <div class="compat-detail">No Credit Card</div>
+      </div>
+    </div>
+    <div class="compat-item reveal delay-3">
+      <div class="compat-icon">🔒</div>
+      <div class="compat-text">
+        <div class="compat-title">Secure Installer</div>
+        <div class="compat-detail">Verified & Safe</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FINAL CTA -->
+<div id="final-cta">
+  <h2 class="final-title reveal">
+    The World<br>Needs <span>You</span>
+  </h2>
+  <p class="final-sub reveal">Millions of survivors are already fighting. Join them — it's free, and you can start today.</p>
+
+  <a href="#" class="btn-large reveal" id="mainCta">
+    <svg style="width:22px;height:22px;fill:currentColor" viewBox="0 0 24 24"><path d="M12 16L7 11h3V4h4v7h3l-5 5zm-7 3h14v2H5v-2z"/></svg>
+    Download Once Human for Windows
+  </a>
+
+  <div class="reassurance reveal">Free · No credit card required · Windows 10 / 11 · Secure official installer</div>
+</div>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="section-label reveal">08 / FAQ</div>
+  <h2 class="section-title reveal">Common <span style="color:var(--accent)">Questions</span></h2>
+
+  <div class="faq-item">
+    <button class="faq-question" aria-expanded="false">
+      Is Once Human free to play?
+      <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <div class="faq-answer">
+      <p>Yes — Once Human is completely free to download and play. There are optional cosmetic items available, but all core gameplay and content is accessible at no cost.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-question" aria-expanded="false">
+      What platform does the game support?
+      <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <div class="faq-answer">
+      <p>Once Human is available on Windows PC (Windows 10 and Windows 11). The installer on this page is the official Windows version. Mobile versions are also available.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-question" aria-expanded="false">
+      Is the download safe?
+      <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <div class="faq-answer">
+      <p>Absolutely. This is the official installer distributed directly by the developers. It has been scanned and verified. You can also verify the digital signature after downloading.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-question" aria-expanded="false">
+      Can I play with friends?
+      <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <div class="faq-answer">
+      <p>Yes! Once Human features full co-op multiplayer. You can team up with friends to build bases, complete missions, and fight powerful enemies together in the shared open world.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Once Human</div>
+  <div class="footer-copy">© 2024 Once Human. All rights reserved. This is an unofficial fan-created download page.</div>
+</footer>
+
+<script>
+  // SCROLL PROGRESS BAR
+  const progressBar = document.getElementById('progressBar');
+  window.addEventListener('scroll', () => {
+    const scrolled = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+    progressBar.style.width = scrolled + '%';
+  }, { passive: true });
+
+  // SCROLL REVEAL
+  const revealEls = document.querySelectorAll('.reveal');
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  revealEls.forEach(el => revealObserver.observe(el));
+
+  // HERO VIDEO FALLBACK
+  const heroVideo = document.getElementById('heroVideo');
+  const heroBg = document.getElementById('heroBg');
+  if (heroVideo) {
+    heroVideo.addEventListener('error', () => {
+      heroVideo.style.display = 'none';
+    });
+    heroVideo.load();
+  }
+
+  // COUNTER ANIMATION
+  function animateCounter(el, target, duration = 2000) {
+    let start = 0;
+    const step = (timestamp) => {
+      if (!start) start = timestamp;
+      const progress = Math.min((timestamp - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      el.textContent = Math.floor(eased * target);
+      if (progress < 1) requestAnimationFrame(step);
+      else el.textContent = target;
+    };
+    requestAnimationFrame(step);
+  }
+
+  const counterObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const target = parseInt(entry.target.dataset.target);
+        if (!isNaN(target)) animateCounter(entry.target, target);
+        counterObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.5 });
+
+  document.querySelectorAll('[data-target]').forEach(el => counterObserver.observe(el));
+
+  // FAQ ACCORDION
+  document.querySelectorAll('.faq-question').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item = btn.closest('.faq-item');
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+      if (!isOpen) item.classList.add('open');
+    });
+  });
+
+  // BUTTON RIPPLE EFFECT
+  document.querySelectorAll('.btn-primary, .btn-large').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const ripple = document.createElement('span');
+      ripple.style.cssText = `
+        position:absolute;
+        border-radius:50%;
+        background:rgba(255,255,255,0.3);
+        pointer-events:none;
+        width:120px;height:120px;
+        margin:-60px;
+        top:${e.offsetY}px;
+        left:${e.offsetX}px;
+        animation:rippleAnim 0.6s ease-out forwards;
+        z-index:10;
+      `;
+      btn.appendChild(ripple);
+      setTimeout(() => ripple.remove(), 600);
+    });
+  });
+
+  const rippleStyle = document.createElement('style');
+  rippleStyle.textContent = `
+    @keyframes rippleAnim {
+      from { transform: scale(0); opacity: 1; }
+      to   { transform: scale(3); opacity: 0; }
+    }
+  `;
+  document.head.appendChild(rippleStyle);
+
+  // SMOOTH SCROLL for anchor links
+  document.querySelectorAll('a[href^="#"]').forEach(link => {
+    link.addEventListener('click', (e) => {
+      const target = document.querySelector(link.getAttribute('href'));
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  });
+
+  // HERO TITLE STAGGER ANIMATION on load
+  window.addEventListener('load', () => {
+    document.querySelectorAll('#hero .reveal').forEach((el, i) => {
+      setTimeout(() => el.classList.add('visible'), 200 + i * 150);
+    });
+  });
+
+  // PARALLAX on hero background
+  window.addEventListener('scroll', () => {
+    const heroEl = document.getElementById('hero');
+    const scroll = window.scrollY;
+    if (scroll < heroEl.offsetHeight) {
+      const bg = heroEl.querySelector('.hero-placeholder');
+      if (bg) bg.style.transform = `translateY(${scroll * 0.3}px)`;
+    }
+  }, { passive: true });
+</script>
+</body>
+</html>
